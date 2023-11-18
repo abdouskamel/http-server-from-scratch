@@ -21,7 +21,7 @@ int init_signals()
 
 /*
  * Open socket serv_ip:port as the HTTP listening socket.
- * root_dir is the directory from which files are served.
+ * [root_dir] is the directory from which files are served.
  * [serv_ip] must be an ipv4 address, in application form.
  * @return 0 on success, -1 on failure.
  */

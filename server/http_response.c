@@ -7,7 +7,7 @@
 #include <fcntl.h>
 
 /*
- * Send to the client an HTTP response consisting of [http_resp].
+ * Use [http_resp] to send the client an HTTP response.
  * [content_path] is the path of the file to be sent as a message body.
  * If http_resp.status_code != STATUS_OK, content_path is ignored.
  * @return 0 on success, -1 on failure.
@@ -18,7 +18,7 @@ int send_http_response(int client_fd, http_response_t *http_resp, char *content_
     int nb_char;
     char *buff_write_ptr = buffer;
 
-    /* Write response line */
+    // Write response line
     nb_char = print_http_version(buff_write_ptr, http_resp->version);
     buff_write_ptr += nb_char;
 
@@ -28,12 +28,12 @@ int send_http_response(int client_fd, http_response_t *http_resp, char *content_
     nb_char = print_status_msg(buff_write_ptr, http_resp->status_code, &content_path);
     buff_write_ptr += nb_char;
 
-    /* Write response headers */
+    // Write response headers
     int content_fd = open(content_path, O_RDONLY);
     if (content_fd == -1)
         return (-1);
 
-    /* Get info about the content file */
+    // Get info about the content file
     struct stat content_info;
     if (fstat(content_fd, &content_info) == -1)
     {
@@ -47,7 +47,7 @@ int send_http_response(int client_fd, http_response_t *http_resp, char *content_
     nb_char = sprintf(buff_write_ptr, "Content-Length : %ld\r\n", content_info.st_size);
     buff_write_ptr += nb_char;
 
-    /* Endof headers, send response line and response headers */
+    // Endof headers, send response line and response headers
     nb_char = sprintf(buff_write_ptr, "\r\n");
     buff_write_ptr += nb_char;
 
@@ -57,7 +57,7 @@ int send_http_response(int client_fd, http_response_t *http_resp, char *content_
         return (-1);
     }
 
-    /* Write message body */
+    // Write message body
     ssize_t size;
     while ((size = read(content_fd, buffer, RESPONSE_BUFF_LENGTH)) > 0)
     {
@@ -104,23 +104,23 @@ int print_status_msg(char *buffer, http_status_t status_code, char **content_pat
         return (sprintf(buffer, "OK\r\n"));
 
     case STATUS_BAD_REQUEST:
-        *content_path = "html/bad_request.html";
+        *content_path = "error_html_pages/bad_request.html";
         return (sprintf(buffer, "Bad Request\r\n"));
 
     case STATUS_NOT_FOUND:
-        *content_path = "html/not_found.html";
+        *content_path = "error_html_pages/not_found.html";
         return (sprintf(buffer, "Not Found\r\n"));
 
     case STATUS_REQ_HEADER_TOO_LARGE:
-        *content_path = "html/header_too_large.html";
+        *content_path = "error_html_pages/header_too_large.html";
         return (sprintf(buffer, "Request Header Fields Too Large\r\n"));
 
     case STATUS_NOT_IMPLEMENTED:
-        *content_path = "html/not_implemented.html";
+        *content_path = "error_html_pages/not_implemented.html";
         return (sprintf(buffer, "Not Implemented\r\n"));
 
     case STATUS_HTTP_VERSION:
-        *content_path = "html/http_version.html";
+        *content_path = "error_html_pages/http_version.html";
         return (sprintf(buffer, "HTTP Version Not Supported\r\n"));
 
     default:
@@ -133,10 +133,10 @@ int print_status_msg(char *buffer, http_status_t status_code, char **content_pat
  */
 int print_content_type(char *buffer, char *content_path)
 {
-    /* Get file extension */
+    // Get file extension
     char *dot = strrchr(content_path, '.');
 
-    /* Can't find type : no dots, dot at the beginning, dot at the end */
+    // Can't find content type : no dots, dot at the beginning, dot at the end
     if (dot == NULL || dot == content_path || *(dot + 1) == '\0')
         return (sprintf(buffer, "Content-Type : application/octet-stream\r\n"));
 

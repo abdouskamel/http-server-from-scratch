@@ -2,7 +2,7 @@
 #include "http_response.h"
 
 /*
- * Process given http_req_t by sending an HTTP response to client.
+ * Process the given http_req_t by sending an HTTP response to client.
  */
 void process_http_req(server_info_t *serv_info, http_req_t *http_req)
 {

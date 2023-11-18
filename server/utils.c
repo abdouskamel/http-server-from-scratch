@@ -6,10 +6,9 @@
 #define EMPTY_SOCK_BUFF_LEN 1024
 
 /*
- * Read a HTTP line of max length [max_len].
- * Return on success the number of read characters.
- * On failure, return READ_HEADER_TO_LARGE if the size of the header is greater
- * than max_len.
+ * Read an HTTP line of max length [max_len].
+ * Return on success the number of characters.
+ * On failure, return READ_HEADER_TO_LARGE if the size of the header is greater than HTTP_HEADER_MAX_LEN.
  * If the header line doesn't end with \r and \n, return HEADER_LINE_MALFORMED.
  * Otherwise, return (-1) for general failure.
  */
@@ -52,7 +51,7 @@ ssize_t read_http_line(int fd, char *buffer, size_t max_len)
 }
 
 /*
- * Clear the socket buffer for the given socket.
+ * Clear the socket buffer of the given socket.
  */
 void clear_socket_buff(int sock)
 {

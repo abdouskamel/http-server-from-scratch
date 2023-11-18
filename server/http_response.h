@@ -28,7 +28,7 @@ typedef struct http_response_s
 } http_response_t;
 
 /*
- * Send to the client an HTTP response consisting of [http_resp].
+ * Use [http_resp] to send the client an HTTP response.
  * [content_path] is the path of the file to be sent as a message body.
  * If http_resp.status_code != STATUS_OK, content_path is ignored.
  * @return 0 on success, -1 on failure.

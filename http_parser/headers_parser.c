@@ -5,7 +5,7 @@
 #include <string.h>
 
 /*
- * Init headers struct fields to their default values.
+ * Init headers struct fields with their default values.
  */
 void init_http_headers(http_headers_t *req_head)
 {
@@ -83,7 +83,7 @@ parse_log_t parse_http_req_header(char *req_txt, http_headers_t *req_head)
 }
 
 /*
- * hname must be the name of a http header.
+ * hname must be the name of an http header.
  * hdata the data associated with the header name.
  * Fills req_head with those information.
  * @return 0 on success, 1 if the header is unsupported, -1 on failure.
@@ -98,7 +98,7 @@ int extract_http_header(char *hname, char *hdata, http_headers_t *req_head)
     if (data_len == 0)
         return (-1);
 
-    // The host data is stored directly as a string
+    // Host data is stored directly as a string
     if (strcmp(hname, "Host") == 0)
     {
         if (req_head->host != NULL)
@@ -108,7 +108,7 @@ int extract_http_header(char *hname, char *hdata, http_headers_t *req_head)
         strcpy(req_head->host, hdata);
     }
 
-    // The user-agent data is stored directly as a string
+    // User-agent data is stored directly as a string
     else if (strcmp(hname, "User-Agent") == 0)
     {
         if (req_head->user_agent != NULL)
@@ -118,7 +118,7 @@ int extract_http_header(char *hname, char *hdata, http_headers_t *req_head)
         strcpy(req_head->user_agent, hdata);
     }
 
-    // The content-type data is stored directly as a string
+    // Content-type data is stored directly as a string
     else if (strcmp(hname, "Content-Type") == 0)
     {
         if (req_head->content_type != NULL)
@@ -128,7 +128,7 @@ int extract_http_header(char *hname, char *hdata, http_headers_t *req_head)
         strcpy(req_head->content_type, hdata);
     }
 
-    // The content-length is stored as a positive integer
+    // Content-length is stored as a positive integer
     else if (strcmp(hname, "Content-Length") == 0)
     {
         if (req_head->content_len != -1)
