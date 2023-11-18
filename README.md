@@ -13,7 +13,7 @@ make
 ```
 ./build/http_server 127.0.0.1 8080 test
 ```
-Here the server listens to the port 8080 on localhost, and serves files from the test directory.
+Here the server is listening on port 8080 on localhost, and serves files from the test directory.
 
 3. Access `localhost:8080/index.html` from you browser.
 
