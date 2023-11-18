@@ -59,7 +59,7 @@ void serve_client(server_info_t *serv_info)
     if (size == -1)
         return;
 
-    plog = parse_http_req_line(buffer, &http_req);
+    plog = parse_http_req_line(buffer, serv_info->root_dir, &http_req);
     if (manage_parse_logs(plog, serv_info->client_fd) == -1)
     {
         close(serv_info->client_fd);

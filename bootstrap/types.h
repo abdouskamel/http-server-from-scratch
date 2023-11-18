@@ -21,6 +21,7 @@ typedef struct server_info_s
 {
     struct sockaddr_in sock_info;
     int sock_fd;
+    char *root_dir;
 
     struct sockaddr_in client_info;
     int client_fd;

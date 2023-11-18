@@ -15,10 +15,10 @@ void free_http_req_line(http_req_t *req_struct);
 
 /*
  * Parse the request line of [req_txt], by returning parse logs.
- * If the parse succeeds, line_end points to the character following the end of
- * the request line.
+ * [root_dir] is the directory from which files are served.
+ * If the parse succeeds, line_end points to the character following the end of the request line.
  */
-parse_log_t parse_http_req_line(char *req_txt, http_req_t *req_struct);
+parse_log_t parse_http_req_line(char *req_txt, char *root_dir, http_req_t *req_struct);
 
 /*
  * Return the http_method_t enum value associated with string.
@@ -27,11 +27,12 @@ parse_log_t parse_http_req_line(char *req_txt, http_req_t *req_struct);
 http_method_t str_to_method(char *string);
 
 /*
- * [string] must be a valid URI, and musn't be const.
+ * [uri] must be a valid URI, and musn't be const.
+ * [root_dir] is the directory from which files are served.
  * Parse the given URI and store the result in [uri_s].
  * @return 0 on success, -1 on failure.
  */
-int extract_http_uri(char *string, http_uri_t *uri_s);
+int extract_http_uri(char *uri, char *root_dir, http_uri_t *uri_s);
 
 /*
  * Return the http_version_t enum value associated with string.

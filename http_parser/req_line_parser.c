@@ -27,8 +27,10 @@ void free_http_req_line(http_req_t *req_struct)
 
 /*
  * Parse the request line of [req_txt], by returning parse logs.
+ * [root_dir] is the directory from which files are served.
+ * If the parse succeeds, line_end points to the character following the end of the request line.
  */
-parse_log_t parse_http_req_line(char *req_txt, http_req_t *req_struct)
+parse_log_t parse_http_req_line(char *req_txt, char *root_dir, http_req_t *req_struct)
 {
     // Retrieve HTTP method
     char *token = strtok(req_txt, " ");
@@ -47,7 +49,7 @@ parse_log_t parse_http_req_line(char *req_txt, http_req_t *req_struct)
         return (PARSE_INVALID_FORMAT);
 
     // Malformed URI
-    if (extract_http_uri(token, &req_struct->uri) == -1)
+    if (extract_http_uri(token, root_dir, &req_struct->uri) == -1)
         return (PARSE_INVALID_URI_FORMAT);
 
     // Get HTTP version
@@ -100,50 +102,55 @@ http_method_t str_to_method(char *string)
 }
 
 /*
- * [string] must be a valid URI, and musn't be const.
+ * [uri] must be a valid URI, and musn't be const.
+ * [root_dir] is the directory from which files are served.
  * Parse the given URI and store the result in [uri_s].
  * @return 0 on success, -1 on failure.
  */
-int extract_http_uri(char *string, http_uri_t *uri_s)
+int extract_http_uri(char *uri, char *root_dir, http_uri_t *uri_s)
 {
-    if (string[0] != '/')
+    if (uri[0] != '/')
         return (-1);
 
-    size_t buff_len;
+    size_t uri_len, root_dir_len;
 
-    char *qmark = strchr(string, '?');
+    char *qmark = strchr(uri, '?');
 
     if (qmark == NULL)
         uri_s->query_str = NULL;
 
     else
     {
-        // Cut [string] into file_path\0query_string
+        // Cut [uri] into file_path\0query_string
         *qmark = '\0';
 
         // Copy query string
-        buff_len = strlen(qmark + 1);
-        if (buff_len == 0)
+        uri_len = strlen(qmark + 1);
+        if (uri_len == 0)
             uri_s->query_str = NULL;
 
         else
         {
-            uri_s->query_str = malloc(buff_len + 1);
+            uri_s->query_str = malloc(uri_len + 1);
             strcpy(uri_s->query_str, qmark + 1);
         }
     }
 
-    buff_len = strlen(string);
+    uri_len = strlen(uri);
+    root_dir_len = strlen(root_dir);
 
     // No URI given
-    if (buff_len == 0)
+    if (uri_len == 0)
     {
         free(uri_s->query_str);
         return (-1);
     }
 
-    uri_s->file_path = malloc(buff_len + 1);
-    strcpy(uri_s->file_path, string);
+    // set file_path = root_dir/uri
+    uri_s->file_path = malloc(root_dir_len + uri_len + 1);
+    strcpy(uri_s->file_path, root_dir);
+    uri_s->file_path[root_dir_len] = '/';
+    strcpy(uri_s->file_path + root_dir_len + 1, uri + 1);
 
     return (0);
 }

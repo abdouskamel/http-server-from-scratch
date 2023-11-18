@@ -5,7 +5,7 @@
 #include "../bootstrap/types.h"
 
 /*
- * Process given http_req_t by sending HTTP response to client.
+ * Process given http_req_t by sending an HTTP response to client.
  */
 void process_http_req(server_info_t *serv_info, http_req_t *http_req);
 

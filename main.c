@@ -9,9 +9,9 @@
 
 int main(int argc, char **argv)
 {
-    if (argc < 3)
+    if (argc < 4)
     {
-        fprintf(stderr, "Usage : <ipv4_address> <port>\n");
+        fprintf(stderr, "Usage : <ipv4_address> <port> <root_dir>\n");
         return (EXIT_FAILURE);
     }
 
@@ -29,11 +29,13 @@ int main(int argc, char **argv)
     }
 
     server_info_t serv_info;
-    if (init_server(argv[1], in_port, &serv_info) == -1)
+    if (init_server(argv[1], in_port, argv[3], &serv_info) == -1)
     {
         fprintf(stderr, "Can't init HTTP server : %s.\n", strerror(errno));
         return (EXIT_FAILURE);
     }
+
+    printf("Server running on %s:%d...\n", argv[1], in_port);
 
     serve_forever(&serv_info);
     free_server(&serv_info);
